@@ -36,8 +36,8 @@ Please follow these instructions to install ObfuscationEngineMethods:
 
 ### Main Menu
 
-[Main Menu Screen](screenshots/menu.jpg)
+![Main Menu Screen](screenshots/menu.jpg)
 
 ### Decrypt Password
 
-[Decrypt Password Screen](screenshots/decrypt.jpg)
+![Decrypt Password Screen](screenshots/decrypt.jpg)
