@@ -31,3 +31,13 @@ Please follow these instructions to install ObfuscationEngineMethods:
 6. You can make a shortcut of *ObfuscationEngineMethods.cmd* in your Desktop for easy access.
 
 7. Execute *ObfuscationEngineMethods.cmd* and enjoy!
+
+## Screenshots
+
+### Main Menu
+
+[Main Menu Screen](screenshots/menu.jpg)
+
+### Decrypt Password
+
+[Decrypt Password Screen](screenshots/decrypt.jpg)
