@@ -1,7 +1,7 @@
 @echo off
 REM /**
 REM *
-REM * @author 23113901
+REM * @author anjhared
 REM */
 
 REM //This will get the current windows version in order to choose the most appropriate welcome screen
