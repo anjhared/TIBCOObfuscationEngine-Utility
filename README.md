@@ -36,8 +36,8 @@ Please follow these instructions to install ObfuscationEngineMethods:
 
 ### Main Menu
 
-![Main Menu Screen](https://raw.githubusercontent.com/anjhared/TIBCOObfuscationEngine-Utility/master/screenshots/menu.jpg)
+![Main Menu Screen](https://raw.githubusercontent.com/anjhared/TIBCOObfuscationEngine-Utility/screenshots/menu.JPG)
 
 ### Decrypt Password
 
-![Decrypt Password Screen](https://raw.githubusercontent.com/anjhared/TIBCOObfuscationEngine-Utility/master/screenshots/decrypt.jpg)
+![Decrypt Password Screen](https://raw.githubusercontent.com/anjhared/TIBCOObfuscationEngine-Utility/screenshots/decrypt.JPG)
