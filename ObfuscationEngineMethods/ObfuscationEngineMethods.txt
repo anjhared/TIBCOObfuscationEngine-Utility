@@ -1,0 +1,269 @@
+@echo off
+REM /**
+REM *
+REM * @author 23113901
+REM */
+
+REM //This will get the current windows version in order to choose the most appropriate welcome screen
+FOR /f "tokens=2 delims==" %%f IN ('wmic os get version /value ^| find "="') DO SET "OSVersion=%%f"
+
+IF %OSVersion:~0,3%==10. (
+  goto windows10WelcomeScreen
+) ELSE (
+    goto previousVersionsWelcomeScreen
+)
+
+:windows10WelcomeScreen
+ECHO ************************************************************************************************************************
+ECHO *                                 Welcome to the TIBCO ObfuscationEngine Class Methods                                 *
+ECHO *                                                                                                                      *
+ECHO *                                                                                                                      *
+ECHO *  This tool will invoke the ObfuscationEngine class methods which are part of TIBCO Software. You will be able to do  *
+ECHO *  the following things:                                                                                               *
+ECHO *                                                                                                                      *
+ECHO *     1. Decrypt a TIBCO encrypted password                                                                            *
+ECHO *     2. Deobfuscate a TIBCO obfuscated password                                                                       *
+ECHO *     3. Encrypt a password using TIBCO encryption method                                                              *
+ECHO *     4. Obfuscate a password using TIBCO obfuscation method                                                           *
+ECHO *                                                                                                                      *
+ECHO *  IMPORTANT: Please make sure you setup this program prior using it: Right click this '.cmd' file ^> Edit              *
+ECHO *             Set proper values to the following variables: JAVA_DIR, TIBCO_DIR, TIB_VER, JAVA_CLASS_DIR               *
+ECHO *                                                                                                                      *
+ECHO ************************************************************************************************************************
+ECHO:
+ECHO:
+goto programSetup
+
+:previousVersionsWelcomeScreen
+ECHO *******************************************************************************
+ECHO *            Welcome to the TIBCO ObfuscationEngine Class Methods             *
+ECHO *                                                                             *
+ECHO *                                                                             *
+ECHO *  This tool will invoke the ObfuscationEngine class methods which are part   *
+ECHO *  of TIBCO Software. You will be able to do the following things:            *
+ECHO *                                                                             *
+ECHO *     1. Decrypt a TIBCO encrypted password                                   *
+ECHO *     2. Deobfuscate a TIBCO obfuscated password                              *
+ECHO *     3. Encrypt a password using TIBCO encryption method                     *
+ECHO *     4. Obfuscate a password using TIBCO obfuscation method                  *
+ECHO *                                                                             *
+ECHO *  IMPORTANT: Please make sure you setup this program prior using it: Right   *
+ECHO *             click this '.cmd' file ^> Edit                                   *
+ECHO *             Set proper values to the following variables: JAVA_DIR,         *
+ECHO *             TIBCO_DIR, TIB_VER, JAVA_CLASS_DIR                              *
+ECHO *                                                                             *
+ECHO *******************************************************************************
+ECHO:
+ECHO:
+goto programSetup
+
+:programSetup 
+REM //Please update this variable with the correct Java\...\bin directory...
+SET JAVA_DIR=C:\Program Files\Java\jdk1.6.0_45\bin
+REM //Please update this variable with the correct TIBCO_HOME directory (e.g. C:\tibco)...
+SET TIBCO_DIR=C:\tibco
+REM //Please update this variable with the correct TIBCO version number...
+SET TIB_VER=5.8
+REM //Please update this variable with the correct directory of your "ObfuscationEngineMethodCalls.java" file...
+SET JAVA_CLASS_DIR=C:\ObfuscationEngineMethods
+
+REM //This variable does not need to be changed unless there is an issue while compiling or executing this java class. The jar names might change 
+REM //slightly depending on the tibco version that is installed, in that case  you can modify the jar names.
+REM //The jar files needed to run this class are:
+REM //
+REM // commons-logging-1.1.jar;enttoolkit.jar;slf4j-api-1.5.2.jar;slf4j-simple-1.5.2.jar;TIBCrypt.jar
+REM //
+SET varClasspath="%TIBCO_DIR%\tpcl\%TIB_VER%\lib\commons-logging-1.1.jar;%TIBCO_DIR%\tpcl\%TIB_VER%\lib\entrust\enttoolkit.jar;%TIBCO_DIR%\tpcl\%TIB_VER%\lib\slf4j-api-1.5.2.jar;%TIBCO_DIR%\tpcl\%TIB_VER%\lib\slf4j-simple-1.5.2.jar;%TIBCO_DIR%\tra\%TIB_VER%\lib\TIBCrypt.jar;%JAVA_CLASS_DIR%;."
+
+IF EXIST "%JAVA_DIR%" (
+    IF EXIST "%TIBCO_DIR%" (
+	    IF EXIST "%JAVA_CLASS_DIR%" (
+		    IF EXIST "%TIBCO_DIR%\tra\%TIB_VER%" (
+			    
+				REM // If you get any errors while trying to compile or execute this java class please make sure that the paths to each of the jar
+                REM // files listed in the %varClasspath% variable are correct. The jar files needed to run this class are:
+				REM //
+                REM // commons-logging-1.1.jar;enttoolkit.jar;slf4j-api-1.5.2.jar;slf4j-simple-1.5.2.jar;TIBCrypt.jar
+				REM //
+				REM // The file names might change slightly depending on the tibco version that is installed, in that case fix the jar names.
+			    
+				IF NOT EXIST "%JAVA_CLASS_DIR%\ObfuscationEngineMethodCalls.class" (
+			
+			        ECHO INFO: No class file to be run was found. Attempting new compilation of "ObfuscationEngineMethodCalls.java"...
+					ECHO:
+					
+					SET PATH="%JAVA_DIR%"
+                    CD "%JAVA_CLASS_DIR%"
+					
+				    javac -classpath %varClasspath% ObfuscationEngineMethodCalls.java
+  
+                    IF EXIST "%JAVA_CLASS_DIR%\ObfuscationEngineMethodCalls.class" (
+  
+                        ECHO:
+                        ECHO INFO: "ObfuscationEngineMethodCalls.class" file was created successfully after first compilation of "ObfuscationEngineMethodCalls.java"
+						ECHO:
+              			
+		                goto :programMenuHeader
+				
+				    ) ELSE (goto javacompileError)
+				
+			    ) ELSE (
+				  
+				      SET PATH="%JAVA_DIR%"
+                      CD "%JAVA_CLASS_DIR%"
+                      goto programMenuHeader
+				  )
+			
+			) ELSE ( goto tibcoVersionError)
+		) ELSE ( goto javaclassError)
+	) ELSE ( goto tibcoError)
+) ELSE ( goto javaError)
+
+
+:programMenuHeader
+
+ECHO Please select an option...
+ECHO:
+ECHO:
+ECHO 1. Decrypt/Deobfuscate a password
+ECHO 2. Encrypt a password using TIBCO encryption method
+ECHO 3. Obfuscate a password using TIBCO obfuscation method
+ECHO:
+ECHO:
+goto programMenuBody
+
+
+:programMenuBody
+
+SET /p prompt= ^>^>
+
+IF %prompt%==1 (
+  goto decryptPasswordMenu
+) ELSE IF %prompt%==2 (
+    goto encryptPasswordMenu
+  ) ELSE IF %prompt%==3 (
+      goto obfuscatePasswordMenu
+	) ELSE ( 
+	    ECHO Bad input. Try again...
+        goto programMenuBody
+	  )
+
+:decryptPasswordMenu
+
+ECHO Please specify the encrypted/obfuscated password to decrypt/deobfuscate...
+ECHO:
+ECHO:
+ECHO ^[Example 1: #!X/lFIXZ4Ti2+e12Hs36KN6oL8Ia3/R1u4EBlbfzT6Tz22f/UxRYtukGkAmSVusuQ ^] --Tibco Encrypted Password
+ECHO:
+ECHO ^[Example 2: 549962682562612772762612602802702772772952762712922992752852893103293283277279292310926327227227527327227427331023122312731433142312731263146313231323113315331353105315731353148315231493143 ^] --Tibco Obfuscated Password
+ECHO:
+ECHO:
+SET /p prompt= ^>^>
+ECHO:
+SET encryptedPwd=%prompt%
+goto decryptPasswordProgram
+
+
+:decryptPasswordProgram
+
+java -classpath %varClasspath% ObfuscationEngineMethodCalls decrypt %encryptedPwd%
+goto endFunctionHeader
+
+
+:encryptPasswordMenu
+
+ECHO Please specify the password which you wish to encrypt...
+ECHO:
+ECHO:
+ECHO ^[Example: MySecretPassword^]
+ECHO:
+ECHO:
+SET /p prompt= ^>^>
+ECHO:
+SET toencryptpwd=%prompt%
+goto encryptPasswordProgram
+
+
+:encryptPasswordProgram
+
+java -classpath %varClasspath% ObfuscationEngineMethodCalls encrypt %toencryptpwd%
+goto endFunctionHeader
+	
+
+:obfuscatePasswordMenu
+
+ECHO Please specify the password which you wish to obfuscate...
+ECHO:
+ECHO:
+ECHO ^[Example: MySecretPassword^]
+ECHO:
+ECHO:
+SET /p prompt= ^>^>
+ECHO:
+SET toobfuscatepwd=%prompt%
+goto obfuscatePasswordProgram
+
+
+:obfuscatePasswordProgram
+
+java -classpath %varClasspath% ObfuscationEngineMethodCalls obfuscate %toobfuscatepwd%
+goto endFunctionHeader
+
+
+REM //Error Handling SEction
+:javaError
+ECHO:
+ECHO JAVA_ERROR: You don't have Java installed or the specified Java directory does not exist. Please make sure that Java is installed and that the JAVA_DIR value specified in this script is correct.
+ECHO JAVA_DIR=%JAVA_DIR%
+pause
+goto endProgram
+
+:tibcoError
+ECHO:
+ECHO TIBCO_ERROR: You don't have TIBCO installed or the specified TIBCO directory does not exist. Please make sure that TIBCO is installed and that the TIBCO_DIR value specified in this script is correct.
+ECHO TIBCO_DIR=%TIBCO_DIR%
+pause
+goto endProgram
+
+:javaclassError
+ECHO:
+ECHO JAVA_CLASS_ERROR: Neither the "ObfuscationEngineMethodCalls.class" class file nor the "ObfuscationEngineMethodCalls.java" java file were found at the specified location. Please make sure the JAVA_CLASS_DIR value specified in this script is correct.
+ECHO JAVA_CLASS_DIR=%JAVA_CLASS_DIR%
+pause
+goto endProgram
+
+:tibcoVersionError
+ECHO:
+ECHO TIBCO_VERSION_ERROR: The TIBCO version specified does not exist.
+ECHO TIB_VER=%TIBCO_DIR%\tra\%TIB_VER%
+pause
+goto endProgram
+
+:javacompileError
+ECHO:
+ECHO JAVA_COMPILING_ERROR: "ObfuscationEngineMethodCalls.java" java file was not compiled successfully. Please check integrity of "javac" command in this script and/or check "javac" error output.
+pause
+goto endProgram
+
+
+REM //Program Ending Handler
+:endFunctionHeader
+
+ECHO:
+ECHO Type '1' to return to the main menu or type '2' to exit:
+
+:endFunctionBody
+
+SET /p prompt= ^>^>
+IF %prompt%==1 (
+  goto programMenuHeader
+) ELSE IF %prompt%==2 (
+  goto endProgram
+) ELSE (
+  ECHO Bad input. Try again...
+  goto endFunctionBody
+)
+
+:endProgram
+
+exit
