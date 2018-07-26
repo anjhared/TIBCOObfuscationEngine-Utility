@@ -22,6 +22,7 @@ Please follow these instructions to install ObfuscationEngineMethods:
    - In line **63** provide the directory of your TIBCO_HOME (eg. *C:\tibco*) in the variable TIBCO_DIR.
    - In line **65** provide the TIBCO version (TRA version) (eg. 5.9) in the variable TIB_VER.
    - In line **67** provide the directory chosen in step **1** in the variable JAVA_CLASS_DIR.
+   - **NOTE:** The *ObfuscationEngineMethodCalls.class* included in this repository was compiled with Java 6. If you want to compile the class with a higher Java version you can omit copying this file at all, but you will need to have JDK installed and provide its bin location in the JAVA_DIR variable at line **63**. Then upon the first run, the tool will automatically compile a new class with *javac*.
    
 4. Save your changes of *ObfuscationEngineMethods.txt* then save again but change extension from *“.txt”* to *“.cmd”* (eg. *ObfuscationEngineMethods.cmd*)
    
