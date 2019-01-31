@@ -59,31 +59,48 @@ goto programSetup
 
 :programSetup 
 REM //Please update this variable with the correct Java\...\bin directory...
-SET JAVA_DIR=C:\Program Files\Java\jdk1.6.0_45\bin
+SET JAVA_DIR=C:\Program Files\Java\jre1.8.0_131\bin
 REM //Please update this variable with the correct TIBCO_HOME directory (e.g. C:\tibco)...
-SET TIBCO_DIR=C:\tibco
+SET TIBCO_DIR=C:\Program Files\tibco
 REM //Please update this variable with the correct TIBCO version number...
-SET TIB_VER=5.8
+SET TIB_VER=6.4
 REM //Please update this variable with the correct directory of your "ObfuscationEngineMethodCalls.java" file...
 SET JAVA_CLASS_DIR=C:\ObfuscationEngineMethods
 
-REM //This variable does not need to be changed unless there is an issue while compiling or executing this java class. The jar names might change 
+IF %TIB_VER:~0,2%==6. (
+  goto setTIBCO6Libraries
+) ELSE (
+    goto setTIBCO5Libraries
+)
+
+REM //The variable %varClasspath% does not need to be changed unless there is an issue while compiling or executing this java class. The jar names might change 
 REM //slightly depending on the tibco version that is installed, in that case  you can modify the jar names.
 REM //The jar files needed to run this class are:
 REM //
-REM // commons-logging-1.1.jar;enttoolkit.jar;slf4j-api-1.5.2.jar;slf4j-simple-1.5.2.jar;TIBCrypt.jar
+REM // TIBCO 5.x: commons-logging-1.1.jar;enttoolkit.jar;slf4j-api-1.5.2.jar;slf4j-simple-1.5.2.jar;TIBCrypt.jar
+REM // TIBCO 6.x: org.apache.log4j_1.2.13.v200806030600.jar;slf4j-api-1.5.2.jar;slf4j-log4j12-1.5.2.jar;com.tibco.security.tibcrypt_2.18.303.001.jar
 REM //
+:setTIBCO5Libraries
 SET varClasspath="%TIBCO_DIR%\tpcl\%TIB_VER%\lib\commons-logging-1.1.jar;%TIBCO_DIR%\tpcl\%TIB_VER%\lib\entrust\enttoolkit.jar;%TIBCO_DIR%\tpcl\%TIB_VER%\lib\slf4j-api-1.5.2.jar;%TIBCO_DIR%\tpcl\%TIB_VER%\lib\slf4j-simple-1.5.2.jar;%TIBCO_DIR%\tra\%TIB_VER%\lib\TIBCrypt.jar;%JAVA_CLASS_DIR%;."
+SET FULL_VERSION_PATH="%TIBCO_DIR%\tra\%TIB_VER%"
+goto startProgram
 
+:setTIBCO6Libraries
+SET varClasspath="%TIBCO_DIR%\bw6\bw\%TIB_VER%\system\design\plugins\org.apache.log4j_1.2.13.v200806030600.jar;%TIBCO_DIR%\bw6\tools\lib\slf4j-api-1.5.2.jar;%TIBCO_DIR%\bw6\tools\lib\slf4j-log4j12-1.5.2.jar;%TIBCO_DIR%\bw6\bw\%TIB_VER%\system\shared\com.tibco.security.tibcrypt_2.18.303.001.jar;%JAVA_CLASS_DIR%;."
+SET FULL_VERSION_PATH="%TIBCO_DIR%\bw6\bw\%TIB_VER%"
+goto startProgram
+
+:startProgram
 IF EXIST "%JAVA_DIR%" (
     IF EXIST "%TIBCO_DIR%" (
 	    IF EXIST "%JAVA_CLASS_DIR%" (
-		    IF EXIST "%TIBCO_DIR%\tra\%TIB_VER%" (
+		    IF EXIST "%FULL_VERSION_PATH%" (
 			    
 				REM // If you get any errors while trying to compile or execute this java class please make sure that the paths to each of the jar
                 REM // files listed in the %varClasspath% variable are correct. The jar files needed to run this class are:
 				REM //
-                REM // commons-logging-1.1.jar;enttoolkit.jar;slf4j-api-1.5.2.jar;slf4j-simple-1.5.2.jar;TIBCrypt.jar
+                REM // TIBCO 5.x: commons-logging-1.1.jar;enttoolkit.jar;slf4j-api-1.5.2.jar;slf4j-simple-1.5.2.jar;TIBCrypt.jar
+				REM // TIBCO 6.x: org.apache.log4j_1.2.13.v200806030600.jar;slf4j-api-1.5.2.jar;slf4j-log4j12-1.5.2.jar;com.tibco.security.tibcrypt_2.18.303.001.jar
 				REM //
 				REM // The file names might change slightly depending on the tibco version that is installed, in that case fix the jar names.
 			    
@@ -210,7 +227,7 @@ java -classpath %varClasspath% ObfuscationEngineMethodCalls obfuscate %toobfusca
 goto endFunctionHeader
 
 
-REM //Error Handling SEction
+REM //Error Handling Section
 :javaError
 ECHO:
 ECHO JAVA_ERROR: You don't have Java installed or the specified Java directory does not exist. Please make sure that Java is installed and that the JAVA_DIR value specified in this script is correct.
@@ -235,7 +252,7 @@ goto endProgram
 :tibcoVersionError
 ECHO:
 ECHO TIBCO_VERSION_ERROR: The TIBCO version specified does not exist.
-ECHO TIB_VER=%TIBCO_DIR%\tra\%TIB_VER%
+ECHO FULL_VERSION_PATH=%FULL_VERSION_PATH%
 pause
 goto endProgram
 
